@@ -119,8 +119,11 @@ class _ConnectToFriendsScreenState extends State<ConnectToFriendsScreen> {
         'followers': [],
         'following': [],
       };
-      final collection = 'users';
-      FirebaseFirestore.instance.collection(collection).add(data);
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .set(data, SetOptions(merge: true));
       navigateToPage(BottomNavBar());
     }
   }

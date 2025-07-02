@@ -6,8 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/core/utils/navigation_manager.dart';
-import 'package:social_app/feature/home/home_screen.dart';
-
+import 'package:social_app/core/widgets/bottom_nav_bar.dart';
 import '../../core/constants/const.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -78,7 +77,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
       // Navigate back to home, replacing this screen
       if (mounted) {
-        navigateToPage(HomeScreen());
+        navigateToPage(BottomNavBar());
       }
     } catch (e) {
       Const.toastFail('Publish failed: \$e');
@@ -97,75 +96,79 @@ class _AddPostScreenState extends State<AddPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Remove this line or set to true
+      // resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('Add Content')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ValueListenableBuilder<bool>(
-              valueListenable: isStoryMode,
-              builder: (context, story, _) {
-                return Row(
-                  children: [
-                    ChoiceChip(
-                      label: const Text('Post'),
-                      selected: !story,
-                      onSelected: (_) => isStoryMode.value = false,
-                    ),
-                    const SizedBox(width: 10),
-                    ChoiceChip(
-                      label: const Text('Story'),
-                      selected: story,
-                      onSelected: (_) => isStoryMode.value = true,
-                    ),
-                  ],
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            GestureDetector(
-              onTap: _pickImage,
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(12),
-                  image: _pickedImage != null
-                      ? DecorationImage(
-                    image: FileImage(File(_pickedImage!.path)),
-                    fit: BoxFit.cover,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ValueListenableBuilder<bool>(
+                valueListenable: isStoryMode,
+                builder: (context, story, _) {
+                  return Row(
+                    children: [
+                      ChoiceChip(
+                        label: const Text('Post'),
+                        selected: !story,
+                        onSelected: (_) => isStoryMode.value = false,
+                      ),
+                      const SizedBox(width: 10),
+                      ChoiceChip(
+                        label: const Text('Story'),
+                        selected: story,
+                        onSelected: (_) => isStoryMode.value = true,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: _pickImage,
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(12),
+                    image: _pickedImage != null
+                        ? DecorationImage(
+                      image: FileImage(File(_pickedImage!.path)),
+                      fit: BoxFit.cover,
+                    )
+                        : null,
+                  ),
+                  child: _pickedImage == null
+                      ? const Center(
+                    child: Icon(Icons.add_a_photo, size: 50, color: Colors.grey),
                   )
                       : null,
                 ),
-                child: _pickedImage == null
-                    ? const Center(
-                  child: Icon(Icons.add_a_photo, size: 50, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _captionController,
+                decoration: const InputDecoration(
+                  labelText: 'Caption (optional)',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _isUploading ? null : _uploadContent,
+                child: _isUploading
+                    ? const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 )
-                    : null,
+                    : Text(isStoryMode.value ? 'Publish Story' : 'Publish Post'),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _captionController,
-              decoration: const InputDecoration(
-                labelText: 'Caption (optional)',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: _isUploading ? null : _uploadContent,
-              child: _isUploading
-                  ? const SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-                  : Text(isStoryMode.value ? 'Publish Story' : 'Publish Post'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

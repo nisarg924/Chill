@@ -106,8 +106,11 @@ class _LoginScreenState extends State<SignUpEmailScreen> {
           'followers': [],
           'following': [],
         };
-        final collection = 'users';
-        FirebaseFirestore.instance.collection(collection).add(data);
+        final uid = FirebaseAuth.instance.currentUser!.uid;
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .set(data, SetOptions(merge: true));
         await navigateToPage(BottomNavBar());
       }
     } on Exception catch (e) {

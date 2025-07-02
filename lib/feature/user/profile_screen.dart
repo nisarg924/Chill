@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:social_app/core/constants/app_image.dart';
 import 'package:social_app/core/constants/const.dart';
 import 'package:social_app/core/constants/dimensions.dart';
+import 'package:social_app/core/utils/navigation_manager.dart';
 import 'package:social_app/core/utils/style.dart';
 import 'package:social_app/core/widgets/custom_button/login_button.dart';
 import 'package:social_app/core/widgets/follower_box.dart';
+import 'package:social_app/feature/settings/setting_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,11 +29,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_sharp),
-          onPressed: () => Navigator.pop(context),
+          onPressed: (){},
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+          IconButton(onPressed: () {navigateToPage(SettingScreen());}, icon: Icon(Icons.settings)),
         ],
       ),
       body: CustomScrollView(

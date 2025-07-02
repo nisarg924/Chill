@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ModelUser {
   final String id;
   final String username;
@@ -17,25 +19,25 @@ class ModelUser {
     required this.createdAt,
   });
 
-  factory ModelUser.fromJson(Map<String, dynamic> json) {
+  factory ModelUser.fromDocument(DocumentSnapshot doc) {
+    final json = doc.data() as Map<String, dynamic>;
     return ModelUser(
-      id: json['id'] as String,
-      username: json['username'] as String,
-      email: json['email'] as String,
-      phoneNumber: json['phoneNumber'],
-      profileImageUrl: json['profileImageUrl'],
-      bio: json['bio'],
-      createdAt: DateTime.parse(json['createdAt']),
+      id: doc.id,
+      username: json['username'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String?,
+      profileImageUrl: json['profileImageUrl'] as String?,
+      bio: json['bio'] as String?,
+      createdAt: (json['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
     'username': username,
     'email': email,
     'phoneNumber': phoneNumber,
     'profileImageUrl': profileImageUrl,
     'bio': bio,
-    'createdAt': createdAt.toIso8601String(),
+    'createdAt': FieldValue.serverTimestamp(),
   };
 }

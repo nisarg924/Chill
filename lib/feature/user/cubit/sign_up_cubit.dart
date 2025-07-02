@@ -1,12 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:social_app/core/constants/const.dart';
 import 'package:social_app/core/storage/shared_pref_utils.dart';
-
-import '../../../core/utils/navigation_manager.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 
 

@@ -1,39 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ModelPost {
+class ModelStory {
   final String id;
   final String userId;
-  final String caption;
   final String? imageUrl;
-  final List<String> likes;
+  final String? caption;
   final DateTime createdAt;
 
-  ModelPost({
+  ModelStory({
     required this.id,
     required this.userId,
-    required this.caption,
     this.imageUrl,
-    required this.likes,
+    this.caption,
     required this.createdAt,
   });
 
-  factory ModelPost.fromDocument(DocumentSnapshot doc) {
+  factory ModelStory.fromDocument(DocumentSnapshot doc) {
     final json = doc.data() as Map<String, dynamic>;
-    return ModelPost(
+    return ModelStory(
       id: doc.id,
       userId: json['userId'] as String? ?? '',
-      caption: json['caption'] as String? ?? '',
       imageUrl: json['imageUrl'] as String?,
-      likes: List<String>.from(json['likes'] ?? []),
+      caption: json['caption'] as String?,
       createdAt: (json['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
   Map<String, dynamic> toJson() => {
     'userId': userId,
-    'caption': caption,
     'imageUrl': imageUrl,
-    'likes': likes,
+    'caption': caption,
     'createdAt': FieldValue.serverTimestamp(),
   };
 }
